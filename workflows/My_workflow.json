@@ -1,0 +1,365 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d3f64c4b-ae83-4f65-8744-e6e14caf3646",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        16
+      ],
+      "id": "82e2f427-dfee-4bfb-8e2c-2743410c6c05",
+      "name": "Webhook",
+      "webhookId": "d3f64c4b-ae83-4f65-8744-e6e14caf3646"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://{{ $json.headers.host }}/upload",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"google_drive_url\": \"{{ $json.body[\"請上傳欲辨識圖片_urls\"].url }}\",\n  \"fileName\": \"{{ $json.body[\"請上傳欲辨識圖片_urls\"].fileName }}\",\n  \"mimeType\": \"image/jpeg\",\n\"webhookUrl\":\"{{$execution.resumeUrl}}\"\n  \n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        16
+      ],
+      "id": "e132252f-72c9-4bac-9258-d9f758c597a1",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        16
+      ],
+      "id": "bdbb851e-086a-45fb-bddf-c35824ddad26",
+      "name": "Wait",
+      "webhookId": "0f3b718d-afaa-4e3d-8068-ada6f3febe1a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfunction processItems(items, task_id) {\n  if (!Array.isArray(items)) {\n    return []; // Not an array, return empty array\n  }\n\n  if (items.length === 0) {\n    return []; // Empty array, return empty array\n  }\n\n  const outputItems = items.map(item => {\n    const newItem = {\n      ...item, // Copy existing item properties\n      \n      task_id: task_id, // Add the task_id\n      host: host\n    };\n    return {\n      json: newItem // Pass the entire item as JSON\n    };\n  });\n\n  return outputItems;\n}\n\nconst items = $input.first().json.body.data.items;\nconst task_id = $input.first().json.body.task_id;\nconst host = $input.first().json.headers.host;\n\nreturn processItems(items, task_id);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        16
+      ],
+      "id": "403758e2-42ca-40d5-a31c-2c85995f791f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2f4abfca-4856-4cc4-bbd7-ecaf3eab448c",
+              "leftValue": "={{ $json.match_score }}",
+              "rightValue": 0.6,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        16
+      ],
+      "id": "be8dd070-3db0-4c35-b4c9-9ad836ae3e2f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "{{ $env.CONFIDENCE_LOW_ALERT_MAIL }}",
+        "subject": "AI OCR品項辨識過低",
+        "message": "=AI OCR品項辨識過低，請點擊以下連結進行修正：{{$json.host}}/correction-form/{{ $json.task_id }}?webhook_url={{$execution.resumeUrl}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        160
+      ],
+      "id": "443bda57-b8de-429d-b2bc-2a6a66edf79c",
+      "name": "Send a message",
+      "webhookId": "fba31fe3-022f-4cb2-bbe7-ff296ec45c98",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CNJVBnFrcjx2IaTz",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        848,
+        160
+      ],
+      "id": "ecea2f2c-8fc5-42e9-8085-246b507bf0ac",
+      "name": "Wait1",
+      "webhookId": "5feacc82-005f-417e-9888-396ce4e94d1a"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1248,
+        16
+      ],
+      "id": "481e0083-043a-4a64-8639-82f1d14809a9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 從單一的輸入項目中，取得我們需要的資料\nconst webhookData = $input.item.json;\n\n// 提取 task_id 和人工修正後的 items 陣列\nconst taskId = webhookData.body.data.task_id;\nconst correctedItems = webhookData.body.data.items;\n\n// 準備一個新的陣列來存放格式化後的結果\nconst formattedItems = [];\n\n// 遍歷每一個人工修正後的項目\nfor (const item of correctedItems) {\n  // 將頂層的 task_id 加到每一個項目中，這樣才能進行匹配\n  item.task_id = taskId;\n  \n  // 將這個格式化後的項目，作為一個獨立的 n8n 項目加到結果陣列中\n  formattedItems.push({\n    json: item\n  });\n}\n\n// 回傳這個新的項目列表\n// 現在的輸出會是 3 個獨立的 n8n 項目，而不是 1 個\nreturn formattedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        160
+      ],
+      "id": "3640715e-bb5c-4b8a-9bc2-1f3ad3870638",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "{{ $env.GOOGLE_SHEET_URL }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "工作表1",
+          "cachedResultUrl": "{{ $env.GOOGLE_SHEET_URL }}"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "data"
+          ],
+          "schema": [
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1632,
+        16
+      ],
+      "id": "10e61c48-6aab-4dcd-bef1-f6537ddf0d0a",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Dz60VIgEE9zUD9pm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        16
+      ],
+      "id": "b0476612-4e2a-4283-ba37-a570dd5536ee",
+      "name": "Aggregate"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Taipei",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "5482e751-ba41-41a7-88b9-a1f02528b6a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b6e91e0259afa998ff222f6a5ffe4032196f8dbd650c74df781a30088d70866"
+  },
+  "id": "KAtsRZ8g4gj5udmY",
+  "tags": []
+}

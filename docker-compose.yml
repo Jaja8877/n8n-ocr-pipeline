@@ -28,7 +28,10 @@ services:
             - N8N_PORT=5678
             - N8N_PROTOCOL=http
             - N8N_TRUST_PROXY=true
+            - N8N_EXPRESS_TRUST_PROXY=true
             - N8N_SECURE_COOKIE=false
+            - CONFIDENCE_LOW_ALERT_MAIL=${CONFIDENCE_LOW_ALERT_MAIL}
+            - GOOGLE_SHEET_URL=${GOOGLE_SHEET_URL}
         networks:
             - app-network
         depends_on:
