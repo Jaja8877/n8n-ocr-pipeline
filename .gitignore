@@ -34,3 +34,5 @@ uploads/
 
 # ngrok
 ngrok.yml
+
+OAuth_client_password.txt
