@@ -1,0 +1,36 @@
+# 配置文件
+.env
+config.ini
+
+# Google Cloud 金鑰（避免誤推到版本庫）
+*.json
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+env/
+venv/
+.Python
+
+# 測試與覆蓋率
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# 上傳文件
+uploads/
+
+# 日誌
+*.log
+
+# ngrok
+ngrok.yml

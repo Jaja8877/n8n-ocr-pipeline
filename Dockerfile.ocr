@@ -1,0 +1,50 @@
+FROM python:3.9-slim
+
+# 安裝系統依賴
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# 設置工作目錄
+WORKDIR /app
+
+# 複製requirements文件
+COPY requirements.txt .
+
+# 安裝Python依賴
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 複製應用代碼
+COPY n8n-ocr-flow.py .
+COPY fuzzy_matching.py .
+COPY celery_config.py .
+COPY celery_tasks.py .
+COPY 客戶訂單資料.csv .
+COPY google_drive_downloader.py .
+COPY file_manager.py .
+COPY ocr_processor.py .
+COPY result_processor.py .
+COPY order_processor.py .
+COPY norse-rampart-448612-p8-0fa1b16f1016.json /app/your-gcp-key.json
+
+
+
+# 創建上傳目錄
+RUN mkdir -p uploads
+
+# 暴露端口
+EXPOSE 5000
+
+# 啟動應用
+CMD ["python", "n8n-ocr-flow.py"]
