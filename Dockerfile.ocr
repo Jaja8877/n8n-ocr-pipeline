@@ -30,7 +30,7 @@ COPY n8n-ocr-flow.py .
 COPY celery_config.py .
 COPY celery_tasks.py .
 COPY 客戶訂單資料.csv .
-COPY norse-rampart-448612-p8-0fa1b16f1016.json /app/your-gcp-key.json
+COPY ${GOOGLE_CREDENTIALS_FILE} .
 
 # 創建 utils 目錄並複製文件
 RUN mkdir -p utils

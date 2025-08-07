@@ -40,7 +40,8 @@
 ### 2. Ngrok 帳號
 1. 在 [ngrok.com](https://ngrok.com/) 註冊帳號
 2. 從儀表板取得您的 authtoken
-3. 注意：免費方案提供的臨時 URL 會在重新啟動時改變
+3. 取得免費版靜態網址URL
+![Alt text](readme-pics/ngrok-setup.png)
 
 ### 3. Google Gemini AI
 1. 訪問 [Google AI Studio](https://aistudio.google.com/)
@@ -66,4 +67,9 @@
 ```bash
 git clone <repository-url>
 cd stark-interview
+```
+
+### 2. 啟動DOCKER
+```bash
+docker-compose up --build -d
 ```
