@@ -26,7 +26,14 @@
 
 ## 必要帳號申請
 
-### 1. Google Form 和 Apps Script 設定
+### 1. 建立 Service Account 及取得 OAuth json
+    *   在 [Google Cloud Console](https://console.cloud.google.com/) 中，前往 "IAM 和管理" -> "服務帳戶"。
+    *   建立服務帳戶並取得金鑰。
+    *   建立OAuth 2.0 用戶端 ID
+    ![Alt text](readme-pics/get-service-account-json.png)
+    ![Alt text](readme-pics/oauth-user.png)
+
+### 2. Google Form 和 Apps Script 設定
 1.  **建立 Google Form**:
     *   前往 [Google Forms](https://docs.google.com/forms/) 並建立一個新的表單。
     *   新增以下欄位：
@@ -44,20 +51,19 @@
         *   儲存觸發器。
     *   ![Alt text](readme-pics/app-script-trigger.png)
 
-
-### 2. Ngrok 帳號
+### 3. Ngrok 帳號
 1.  在 [ngrok.com](https://ngrok.com/) 註冊帳號
 2.  從儀表板取得您的 authtoken
 3.  取得免費版靜態網址URL
     ![Alt text](readme-pics/ngrok-setup.png)
 
-### 3. Google Gemini AI
+### 4. Google Gemini AI
 1.  訪問 [Google AI Studio](https://aistudio.google.com/)
 2.  建立 API 金鑰
 3.  儲存 API 金鑰用於環境設定
     ![Alt text](readme-pics/gemini-api-key.png)
 
-### 4. Gmail 帳號
+### 5. Gmail 帳號
 1.  使用現有的 Gmail 帳號或建立新帳號
 2.  用於 N8N Gmail 整合，您需要設定 OAuth2 憑證：
     *   前往 [Google Cloud Console](https://console.cloud.google.com/)
@@ -68,19 +74,14 @@
     *   docker啟動後，設定OAuth2於Gmail send message n8n節點
         ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
 
-### 5. Google Sheets
+### 6. Google Sheets
 1.  建立新的 Google 試算表用於資料儲存
 2.  將試算表與您的 GCP 服務帳戶電子郵件共用
 3.  複製試算表 URL 用於環境設定
 4.  將試算表調整於知道連結即可使用
 5.  docker啟動後，設定OAuth2於google sheet n8n節點
     ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
-    
-### 6.建立 Service Account 及取得 OAuth json:
-    *   在 [Google Cloud Console](https://console.cloud.google.com/) 中，前往 "IAM 和管理" -> "服務帳戶"。
-    *   建立服務帳戶。
-    *   建立OAuth
-    ![Alt text](readme-pics/oauth-user.png)
+
 ### 7. .env設定
 參照.env.example加入個設定金鑰、帳號、密碼，並改檔名為.env
 
@@ -91,7 +92,6 @@
 ```bash
 git clone <repository-url>
 cd stark-interview
-```
 
 ### 2. 啟動DOCKER
 ```bash
