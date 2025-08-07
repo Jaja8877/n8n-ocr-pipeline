@@ -4,7 +4,7 @@ config.ini
 
 # Google Cloud 金鑰（避免誤推到版本庫）
 *.json
-!My_workflow.json
+
 # Docker
 .dockerignore
 docker-compose.override.yml

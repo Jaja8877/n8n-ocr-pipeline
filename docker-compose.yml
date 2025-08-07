@@ -16,26 +16,61 @@ services:
 
     n8n:
         image: n8nio/n8n:latest
+        container_name: n8n-ocr-pipeline-n8n-1
         restart: always
-        volumes:
-            - n8n_storage:/home/node/.n8n
-            - ./workflows:/home/node/.n8n/workflows
-            - ./init-workflows.sh:/docker-entrypoint-init.d/init-workflows.sh  # 初始化腳本
+        env_file:
+            - .env
         environment:
+            - N8N_USER_EMAIL=${N8N_USER_EMAIL}
+            - N8N_USER_FIRSTNAME=${N8N_USER_FIRSTNAME}
+            - N8N_USER_LASTNAME=${N8N_USER_LASTNAME}
+            - N8N_USER_PASSWORD=${N8N_USER_PASSWORD}
+            - N8N_TRUST_PROXY=true
+            - N8N_IP_WHITELIST=0.0.0.0/0,::/0
             - WEBHOOK_URL=${NGROK_WEBHOOK_URL}
             - NGROK_WEBHOOK_URL=${NGROK_WEBHOOK_URL}
-            - N8N_HOST=0.0.0.0
-            - N8N_PORT=5678
-            - N8N_PROTOCOL=http
-            - N8N_TRUST_PROXY=true
-            - N8N_EXPRESS_TRUST_PROXY=true
-            - N8N_SECURE_COOKIE=false
+            - CONFIDENCE_LOW_ALERT_MAIL=${CONFIDENCE_LOW_ALERT_MAIL}
+            - GOOGLE_SHEET_URL=${GOOGLE_SHEET_URL}
+            - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+            - N8N_RUNNERS_ENABLED=true
+            # 修復權限和配置警告
+            - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+            - N8N_RUNNERS_ENABLED=true
+            
+        volumes:
+            - n8n_storage:/home/node/.n8n
+            - ./workflows:/workflows 
+        networks:
+            - app-network
+        depends_on:
+            - redis
+        
+        healthcheck:
+            test: ["CMD-SHELL", "wget -q --spider -S \"http://localhost:5678/healthz\" || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+    n8n-init:
+        build:
+            context: ./n8n-init
+        
+        volumes:
+            # ★★★ 挂载 Docker socket，让容器可以执行 docker 指令 ★★★
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            - N8N_USER_EMAIL=${N8N_USER_EMAIL}
+            - N8N_USER_FIRSTNAME=${N8N_USER_FIRSTNAME}
+            - N8N_USER_LASTNAME=${N8N_USER_LASTNAME}
+            - N8N_USER_PASSWORD=${N8N_USER_PASSWORD}
             - CONFIDENCE_LOW_ALERT_MAIL=${CONFIDENCE_LOW_ALERT_MAIL}
             - GOOGLE_SHEET_URL=${GOOGLE_SHEET_URL}
         networks:
             - app-network
         depends_on:
-            - redis
+            n8n:
+                condition: service_healthy # 等待 n8n 完全健康后才启动
+        restart: "no" # 这是一个一次性任务
+    
 
     ocr-service:
         build:
