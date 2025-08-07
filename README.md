@@ -43,12 +43,7 @@
         *   選擇「表單提交時」觸發。
         *   儲存觸發器。
     *   ![Alt text](readme-pics/app-script-trigger.png)
-3.  **發布 Apps Script**:
-    *   在 Apps Script 編輯器中，點擊「部署」>「新增部署」。
-    *   選擇「類型」為「Web 應用程式」。
-    *   設定「誰可以存取」為「任何人」。
-    *   點擊「部署」。
-    *   複製 Web 應用程式的 URL。
+
 
 ### 2. Ngrok 帳號
 1.  在 [ngrok.com](https://ngrok.com/) 註冊帳號
