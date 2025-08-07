@@ -70,6 +70,7 @@
     *   API 和服務 → 憑證
     *   為網頁應用程式建立 OAuth 2.0 用戶端 ID
     *   為 N8N 新增授權的重新導向 URL (Ngrok URL)
+    *   亦為辨識錯誤手動調整業面新增重新導向 URL (localhost:8080)
         ![Alt text](readme-pics/gcp-setup.png)
     *   docker啟動後，設定OAuth2於Gmail send message n8n節點
         ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
