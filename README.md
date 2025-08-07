@@ -4,6 +4,8 @@
 
 本專案是基於 n8n 自動化的發票 OCR 處理流水線，具備 Google Drive 整合、OCR 處理和自動資料輸入至 Google Sheets 功能。
 
+![Alt text](readme-pics/ocr-pipeline-overview.png)
+
 ## 功能特色
 
 - 📄 **OCR 處理**: 使用 Google Vision API 自動從圖片中提取文字
@@ -35,7 +37,6 @@
    - 前往 IAM 和管理 → 服務帳戶
    - 點擊「建立服務帳戶」
    - 下載 JSON 金鑰檔案
-   - 將檔案重新命名為 `your-gcp-key.json` 並放置於專案根目錄
 
 ### 2. Ngrok 帳號
 1. 在 [ngrok.com](https://ngrok.com/) 註冊帳號
@@ -47,6 +48,7 @@
 1. 訪問 [Google AI Studio](https://aistudio.google.com/)
 2. 建立 API 金鑰
 3. 儲存 API 金鑰用於環境設定
+![Alt text](readme-pics/gemini-api-key.png)
 
 ### 4. Gmail 帳號
 1. 使用現有的 Gmail 帳號或建立新帳號
@@ -54,12 +56,23 @@
    - 前往 [Google Cloud Console](https://console.cloud.google.com/)
    - API 和服務 → 憑證
    - 為網頁應用程式建立 OAuth 2.0 用戶端 ID
-   - 為 N8N 新增授權的重新導向 URI
+   - 為 N8N 新增授權的重新導向 URL (Ngrok URL)
+   ![Alt text](readme-pics/gcp-setup.png)
+   - 設定OAuth2於Gmail send message n8n節點
+   ![Alt text](readme-pics/Google-OAuth2-setup.png)
 
 ### 5. Google Sheets
 1. 建立新的 Google 試算表用於資料儲存
 2. 將試算表與您的 GCP 服務帳戶電子郵件共用
 3. 複製試算表 URL 用於環境設定
+4. 將試算表調整於知道連結即可使用
+5. 設定OAuth2於google sheet n8n節點
+   ![Alt text](readme-pics/Google-OAuth2-setup.png)
+
+### 6. .env設定
+參照.env.example加入個設定金鑰、帳號、密碼，並改檔名為.env
+
+
 
 ## 安裝與設定
 
