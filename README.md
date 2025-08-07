@@ -75,8 +75,13 @@
 4.  將試算表調整於知道連結即可使用
 5.  docker啟動後，設定OAuth2於google sheet n8n節點
     ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
-
-### 6. .env設定
+    
+### 6.建立 Service Account 及取得 OAuth json:
+    *   在 [Google Cloud Console](https://console.cloud.google.com/) 中，前往 "IAM 和管理" -> "服務帳戶"。
+    *   建立服務帳戶。
+    *   建立OAuth
+    ![Alt text](readme-pics/oauth-user.png)
+### 7. .env設定
 參照.env.example加入個設定金鑰、帳號、密碼，並改檔名為.env
 
 ## 安裝與設定
