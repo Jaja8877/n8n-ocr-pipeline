@@ -59,7 +59,7 @@
    - 為 N8N 新增授權的重新導向 URL (Ngrok URL)
    ![Alt text](readme-pics/gcp-setup.png)
    - 設定OAuth2於Gmail send message n8n節點
-   
+   ![Alt text](readme-pics/Google-OAuth2-setup.png)
 
 ### 5. Google Sheets
 1. 建立新的 Google 試算表用於資料儲存
@@ -67,7 +67,7 @@
 3. 複製試算表 URL 用於環境設定
 4. 將試算表調整於知道連結即可使用
 5. 設定OAuth2於google sheet n8n節點
-   
+![Alt text](readme-pics/Google-OAuth2-setup.png)
 
 ### 6. .env設定
 參照.env.example加入個設定金鑰、帳號、密碼，並改檔名為.env
