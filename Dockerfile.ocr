@@ -27,18 +27,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 複製應用代碼
 COPY n8n-ocr-flow.py .
-COPY fuzzy_matching.py .
 COPY celery_config.py .
 COPY celery_tasks.py .
 COPY 客戶訂單資料.csv .
-COPY google_drive_downloader.py .
-COPY file_manager.py .
-COPY ocr_processor.py .
-COPY result_processor.py .
-COPY order_processor.py .
 COPY norse-rampart-448612-p8-0fa1b16f1016.json /app/your-gcp-key.json
 
-
+# 創建 utils 目錄並複製文件
+RUN mkdir -p utils
+COPY utils/ utils/
 
 # 創建上傳目錄
 RUN mkdir -p uploads

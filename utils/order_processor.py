@@ -1,8 +1,8 @@
-from google_drive_downloader import GoogleDriveDownloader
-from file_manager import FileManager
-from ocr_processor import OcrProcessor
-from fuzzy_matching import OrderFuzzyMatcher
-from result_processor import ResultProcessor
+from .google_drive_downloader import GoogleDriveDownloader
+from .file_manager import FileManager
+from .ocr_processor import OcrProcessor
+from .fuzzy_matching import OrderFuzzyMatcher
+from .result_processor import ResultProcessor
 import re
 
 class OrderProcessor:

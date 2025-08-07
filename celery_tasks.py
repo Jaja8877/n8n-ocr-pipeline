@@ -1,5 +1,5 @@
 from celery_config import celery_app
-from order_processor import OrderProcessor
+from utils.order_processor import OrderProcessor
 
 # 全局實例
 processor = OrderProcessor(
