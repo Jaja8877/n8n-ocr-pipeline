@@ -26,57 +26,68 @@
 
 ## 必要帳號申請
 
-### 1. Google Cloud Platform (GCP)
-1. 前往 [Google Cloud Console](https://console.cloud.google.com/)
-2. 建立新專案或選擇現有專案
-3. 啟用以下 API：
-   - Google Vision API
-   - Google Drive API  
-   - Google Sheets API
-4. 建立服務帳戶：
-   - 前往 IAM 和管理 → 服務帳戶
-   - 點擊「建立服務帳戶」
-   - 下載 JSON 金鑰檔案
+### 1. Google Form 和 Apps Script 設定
+1.  **建立 Google Form**:
+    *   前往 [Google Forms](https://docs.google.com/forms/) 並建立一個新的表單。
+    *   新增以下欄位：
+        *   請上傳欲辨識圖片_urls (File Upload)
+    *   取得表單的公開連結。
+    *   ![Alt text](readme-pics/google-form-setup.png)
+2.  **編寫 Google Apps Script**:
+    *   在 Google Form 中，點擊右上角的「更多」選單（三個點），然後選擇「指令碼編輯器」。
+    *   複製appscript.txt程式碼到 Apps Script 編輯器中
+    *   將 `YOUR_WEBHOOK_URL` 替換為你的 N8N Webhook URL。
+    *   儲存程式碼，並設定觸發器：
+        *   點擊「觸發器」圖示（時鐘）。
+        *   點擊「新增觸發器」。
+        *   選擇「表單提交時」觸發。
+        *   儲存觸發器。
+    *   ![Alt text](readme-pics/app-script-trigger.png)
+3.  **發布 Apps Script**:
+    *   在 Apps Script 編輯器中，點擊「部署」>「新增部署」。
+    *   選擇「類型」為「Web 應用程式」。
+    *   設定「誰可以存取」為「任何人」。
+    *   點擊「部署」。
+    *   複製 Web 應用程式的 URL。
 
 ### 2. Ngrok 帳號
-1. 在 [ngrok.com](https://ngrok.com/) 註冊帳號
-2. 從儀表板取得您的 authtoken
-3. 取得免費版靜態網址URL
-![Alt text](readme-pics/ngrok-setup.png)
+1.  在 [ngrok.com](https://ngrok.com/) 註冊帳號
+2.  從儀表板取得您的 authtoken
+3.  取得免費版靜態網址URL
+    ![Alt text](readme-pics/ngrok-setup.png)
 
 ### 3. Google Gemini AI
-1. 訪問 [Google AI Studio](https://aistudio.google.com/)
-2. 建立 API 金鑰
-3. 儲存 API 金鑰用於環境設定
-![Alt text](readme-pics/gemini-api-key.png)
+1.  訪問 [Google AI Studio](https://aistudio.google.com/)
+2.  建立 API 金鑰
+3.  儲存 API 金鑰用於環境設定
+    ![Alt text](readme-pics/gemini-api-key.png)
 
 ### 4. Gmail 帳號
-1. 使用現有的 Gmail 帳號或建立新帳號
-2. 用於 N8N Gmail 整合，您需要設定 OAuth2 憑證：
-   - 前往 [Google Cloud Console](https://console.cloud.google.com/)
-   - API 和服務 → 憑證
-   - 為網頁應用程式建立 OAuth 2.0 用戶端 ID
-   - 為 N8N 新增授權的重新導向 URL (Ngrok URL)
-   ![Alt text](readme-pics/gcp-setup.png)
-   - 設定OAuth2於Gmail send message n8n節點
-   ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
+1.  使用現有的 Gmail 帳號或建立新帳號
+2.  用於 N8N Gmail 整合，您需要設定 OAuth2 憑證：
+    *   前往 [Google Cloud Console](https://console.cloud.google.com/)
+    *   API 和服務 → 憑證
+    *   為網頁應用程式建立 OAuth 2.0 用戶端 ID
+    *   為 N8N 新增授權的重新導向 URL (Ngrok URL)
+        ![Alt text](readme-pics/gcp-setup.png)
+    *   docker啟動後，設定OAuth2於Gmail send message n8n節點
+        ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
 
 ### 5. Google Sheets
-1. 建立新的 Google 試算表用於資料儲存
-2. 將試算表與您的 GCP 服務帳戶電子郵件共用
-3. 複製試算表 URL 用於環境設定
-4. 將試算表調整於知道連結即可使用
-5. 設定OAuth2於google sheet n8n節點
-![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
+1.  建立新的 Google 試算表用於資料儲存
+2.  將試算表與您的 GCP 服務帳戶電子郵件共用
+3.  複製試算表 URL 用於環境設定
+4.  將試算表調整於知道連結即可使用
+5.  docker啟動後，設定OAuth2於google sheet n8n節點
+    ![Alt text](readme-pics/Google-OAuth2-setup-reupload.png)
 
 ### 6. .env設定
 參照.env.example加入個設定金鑰、帳號、密碼，並改檔名為.env
 
-
-
 ## 安裝與設定
 
 ### 1. 複製專案
+
 ```bash
 git clone <repository-url>
 cd stark-interview

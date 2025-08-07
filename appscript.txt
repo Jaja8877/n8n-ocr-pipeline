@@ -1,0 +1,84 @@
+var POST_URL = ""; // Your ngrok URL or other webhook URL
+
+function onSubmit(e) {
+  var form = FormApp.getActiveForm();
+  var allResponses = form.getResponses();
+  var latestResponse = allResponses[allResponses.length - 1];
+  var itemResponses = latestResponse.getItemResponses();
+  var payload = {};
+
+  for (var i = 0; i < itemResponses.length; i++) {
+    var questionTitle = itemResponses[i].getItem().getTitle();
+    var answer = itemResponses[i].getResponse();
+
+    // Check if the item is a File Upload question type
+    // File upload answers are typically returned as an array of file IDs
+    if (itemResponses[i].getItem().getType() === FormApp.ItemType.FILE_UPLOAD) {
+      if (Array.isArray(answer) && answer.length > 0) {
+        var fileUrls = [];
+        for (var j = 0; j < answer.length; j++) {
+          var fileId = answer[j];
+          try {
+            var file = DriveApp.getFileById(fileId);
+            // Ensure the file is shared publicly or to "Anyone with the link can view"
+            // for the URL to be accessible from your webhook.
+            // If the webhook is using credentials that can access your Drive,
+            // then public sharing might not be strictly necessary, but often simplifies things.
+
+            // It's good practice to ensure sharing settings if the target system needs direct access.
+            // Example of setting sharing (optional, run ONCE for the folder or programmatically):
+            // var folderId = file.getParents().next().getId(); // Get parent folder ID
+            // DriveApp.getFolderById(folderId).setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+            fileUrls.push({
+                url: file.getUrl(),
+                fileName: file.getName(),
+                mimeType: file.getMimeType()
+            });
+            Logger.log('Processed uploaded file: ' + file.getName() + ' URL: ' + file.getUrl());
+
+          } catch (err) {
+            Logger.log('Error processing uploaded file ID "' + fileId + '" for question "' + questionTitle + '": ' + err.message);
+            fileUrls.push({
+                fileId: fileId, // Fallback to file ID if URL couldn't be retrieved
+                error: 'Could not get URL: ' + err.message
+            });
+          }
+        }
+        // If there's only one file, store the first URL directly. Otherwise, store the array.
+        payload[questionTitle + "_urls"] = fileUrls.length === 1 ? fileUrls[0] : fileUrls;
+
+      } else {
+        payload[questionTitle + "_urls"] = "No file uploaded or error.";
+      }
+    } else {
+      // For all other question types, add the answer directly
+      payload[questionTitle] = answer;
+    }
+  }
+
+  // Optional: If you still want to include static images from the form (not user-uploaded)
+  // You can call your getStaticImagesBase64() here if needed.
+  // var staticImagesData = getStaticImagesBase64();
+  // if (staticImagesData.length > 0) {
+  //   payload['static_form_images'] = staticImagesData;
+  // }
+
+
+  var options = {
+    "method": "post",
+    "contentType": "application/json",
+    "payload": JSON.stringify(payload)
+  };
+
+  try {
+    var webhookResponse = UrlFetchApp.fetch(POST_URL, options);
+    Logger.log('Webhook Response: ' + webhookResponse.getContentText());
+  } catch (e) {
+    Logger.log('Error sending to webhook: ' + e.message);
+  }
+}
+
+// Note: The getStaticImagesBase64 function (if you still need it) would remain separate
+// if you choose to include static form images in Base64 format.
+// Otherwise, you can remove it or keep it for debugging static images separately.
