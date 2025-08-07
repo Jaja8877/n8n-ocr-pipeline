@@ -27,11 +27,11 @@
 ## 必要帳號申請
 
 ### 1. 建立 Service Account 及取得 OAuth json
-    *   在 [Google Cloud Console](https://console.cloud.google.com/) 中，前往 "IAM 和管理" -> "服務帳戶"。
-    *   建立服務帳戶並取得金鑰。
-    *   建立OAuth 2.0 用戶端 ID
-    ![Alt text](readme-pics/get-service-account-json.png)
-    ![Alt text](readme-pics/oauth-user.png)
+*   在 [Google Cloud Console](https://console.cloud.google.com/) 中，前往 "IAM 和管理" -> "服務帳戶"。
+*   建立服務帳戶並取得金鑰。
+*   建立OAuth 2.0 用戶端 ID
+![Alt text](readme-pics/get-service-account-json.png)
+![Alt text](readme-pics/oauth-user.png)
 
 ### 2. Google Form 和 Apps Script 設定
 1.  **建立 Google Form**:
