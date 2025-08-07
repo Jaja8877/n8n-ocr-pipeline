@@ -59,7 +59,7 @@
    - 為 N8N 新增授權的重新導向 URL (Ngrok URL)
    ![Alt text](readme-pics/gcp-setup.png)
    - 設定OAuth2於Gmail send message n8n節點
-   ![Alt text](readme-pics/Google-OAuth2-setup.png)
+   
 
 ### 5. Google Sheets
 1. 建立新的 Google 試算表用於資料儲存
