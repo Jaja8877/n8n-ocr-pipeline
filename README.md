@@ -1,6 +1,5 @@
 # OCR N8N 自動化處理流水線
 
-## 此專案僅供 Stark 面試審核使用
 
 本專案是基於 n8n 自動化的發票 OCR 處理流水線，具備 Google Drive 整合、OCR 處理和自動資料輸入至 Google Sheets 功能。
 
